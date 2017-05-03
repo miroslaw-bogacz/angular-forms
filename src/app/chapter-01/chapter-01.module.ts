@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     ReactiveFormsModule
   ],
-  declarations: [Chapter01Component]
+  declarations: [ Chapter01Component ],
+  exports: [ Chapter01Component ]
 })
 export class Chapter01Module { }
