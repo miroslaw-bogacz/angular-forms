@@ -23,8 +23,22 @@ export class Chapter01Component implements OnInit {
       name: [ '' ],
       email: [ '' ],
       issue: [ '' ],
-      description: [ '' ]
+      steps: this.fb.array([
+        [ '' ],
+        [ '' ],
+        [ '' ],
+        [ '' ]
+      ]),
+      description: [ '' ],
+      agreements: this.fb.group({
+        newsletter: [ false ],
+        rules: [ false ]
+      })
     });
+  }
+
+  public submit(values: any): void {
+    console.log(values);
   }
 
 }
