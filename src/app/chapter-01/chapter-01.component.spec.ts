@@ -1,6 +1,40 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Chapter01Component } from './chapter-01.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
+
+function changeTextValue(input: DebugElement, value: string): void {
+  input.nativeElement.value = value;
+  input.triggerEventHandler('input', { target: { value } });
+}
+
+function changeRadioButtonValue(inputs: Array<DebugElement>, value: string): void {
+  const input: DebugElement = inputs
+    .filter((field: DebugElement) => field.nativeElement.value === value)
+    .reduce((acc: DebugElement, field: DebugElement) => field, null);
+
+  if (input) {
+    input.nativeElement.click();
+  }
+}
+
+function changeCheckboxStatus(input: DebugElement, checked: boolean): void {
+  input.nativeElement.checked = checked;
+  input.nativeElement.dispatchEvent(new Event('change'));
+}
+
+function changeSelectValue(input: DebugElement, value: string): void {
+  input.nativeElement.selectedIndex = input.nativeElement.selectedIndex = input.queryAll(By.css('option'))
+    .findIndex((option: DebugElement) => option.nativeElement.value === value);
+
+  input.nativeElement.dispatchEvent(new Event('change'));
+}
+
+function submitFormByClick(button: DebugElement): void {
+  button.nativeElement.click();
+}
 
 describe('Chapter01Component', () => {
   let component: Chapter01Component;
@@ -8,6 +42,7 @@ describe('Chapter01Component', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ ReactiveFormsModule ],
       declarations: [ Chapter01Component ]
     })
     .compileComponents();
@@ -21,5 +56,64 @@ describe('Chapter01Component', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('when user complete form and click send button', () => {
+    let submitMethod,
+        mockedData: any;
+
+    beforeEach(() => {
+      submitMethod = spyOn(component, 'submit');
+
+      mockedData = {
+        name: 'John Smith',
+        email: 'john.smith@mail.com',
+        issue: '0',
+        agreements: {
+          newsletter: true,
+          rules: true
+        },
+        steps: [
+          'step 1', 'step 2', 'step 3', 'step 4'
+        ],
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+      };
+
+      changeTextValue(fixture.debugElement.query(By.css('input[formControlName="name"]')), mockedData.name);
+
+      changeTextValue(fixture.debugElement.query(By.css('input[formControlName="email"]')), mockedData.email);
+
+      changeSelectValue(fixture.debugElement.query(By.css('select[formControlName="issue"]')), mockedData.issue);
+
+      changeCheckboxStatus(
+        fixture.debugElement.query(By.css('input[formControlName="newsletter"]')),
+        mockedData.agreements.newsletter
+      );
+
+      changeCheckboxStatus(
+        fixture.debugElement.query(By.css('input[formControlName="rules"]')),
+        mockedData.agreements.rules
+      );
+
+      mockedData.steps.forEach((value: string, key: number) => {
+        changeTextValue(
+          fixture.debugElement.queryAll(By.css('div[formArrayName="steps"] .step'))[key],
+          mockedData.steps[key]
+        );
+      });
+
+      changeTextValue(
+        fixture.debugElement.query(By.css('textarea[formControlName="description"]')),
+        mockedData.description
+      );
+
+      submitFormByClick(fixture.debugElement.query(By.css('.submit')));
+
+      fixture.detectChanges();
+    });
+
+    it('should call submit method with data', () => {
+      expect(submitMethod).toHaveBeenCalledWith(mockedData);
+    });
   });
 });

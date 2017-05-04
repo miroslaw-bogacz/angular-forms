@@ -43,7 +43,7 @@
   <div formArrayName="steps">
     <div class="form-group" *ngFor="let step of form.get('steps').controls; let i = index">
       <label>Step {{ i + 1 }}</label>
-      <input type="text" class="form-control" [formControlName]="i">
+      <input type="text" class="form-control step" [formControlName]="i">
     </div>
   </div>
 
@@ -53,6 +53,6 @@
   </div>
 
   <div class="form-group">
-    <button class="btn btn-primary">Send</button>
+    <button class="btn btn-primary submit">Send</button>
   </div>
 </form>
