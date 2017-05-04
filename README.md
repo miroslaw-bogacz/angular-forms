@@ -1,6 +1,6 @@
 # Angular ReactiveFormModule
 
-## Chapter 1 - How to make simple form by:
-`formControlName`, `formGroupName`, `formArrayName`
+## Chapter 1 - How to make simple static form by:
+`[formGroup]`,`formControlName`, `formGroupName`, `formArrayName`
 
 ## Unit test ReactiveFormModule
