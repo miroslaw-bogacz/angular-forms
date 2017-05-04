@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
+import { formData } from './data/form-data';
+
 @Component({
   selector: 'app-chapter-01',
   templateUrl: './chapter-01.component.html',
@@ -8,7 +10,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class Chapter01Component implements OnInit {
 
-  private form: FormGroup;
+  public form: FormGroup;
 
   constructor(
     private fb: FormBuilder
@@ -23,6 +25,10 @@ export class Chapter01Component implements OnInit {
       name: [ '' ],
       email: [ '' ],
       issue: [ '' ],
+      agreements: this.fb.group({
+        newsletter: [ false ],
+        rules: [ false ]
+      }),
       steps: this.fb.array([
         [ '' ],
         [ '' ],
@@ -30,15 +36,23 @@ export class Chapter01Component implements OnInit {
         [ '' ]
       ]),
       description: [ '' ],
-      agreements: this.fb.group({
-        newsletter: [ false ],
-        rules: [ false ]
-      })
     });
   }
 
   public submit(values: any): void {
-    console.log(values);
+    // console.log(values);
+  }
+
+  public setValuesForm(): void {
+    console.log('test');
+    this.form.setValue(formData);
+  }
+
+  public patchValue(): void {
+    this.form.patchValue({
+      name: 'John Smith',
+      email: 'john.smith@mail.com'
+    });
   }
 
 }

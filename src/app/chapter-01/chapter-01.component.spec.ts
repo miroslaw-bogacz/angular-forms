@@ -40,6 +40,20 @@ describe('Chapter01Component', () => {
   let component: Chapter01Component;
   let fixture: ComponentFixture<Chapter01Component>;
 
+  const mockedData: any = {
+    name: 'John Smith',
+    email: 'john.smith@mail.com',
+    issue: '0',
+    agreements: {
+      newsletter: true,
+      rules: true
+    },
+    steps: [
+      'step 1', 'step 2', 'step 3', 'step 4'
+    ],
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ ReactiveFormsModule ],
@@ -59,25 +73,10 @@ describe('Chapter01Component', () => {
   });
 
   describe('when user complete form and click send button', () => {
-    let submitMethod,
-        mockedData: any;
+    let submitMethod;
 
     beforeEach(() => {
       submitMethod = spyOn(component, 'submit');
-
-      mockedData = {
-        name: 'John Smith',
-        email: 'john.smith@mail.com',
-        issue: '0',
-        agreements: {
-          newsletter: true,
-          rules: true
-        },
-        steps: [
-          'step 1', 'step 2', 'step 3', 'step 4'
-        ],
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
-      };
 
       changeTextValue(fixture.debugElement.query(By.css('input[formControlName="name"]')), mockedData.name);
 
@@ -114,6 +113,40 @@ describe('Chapter01Component', () => {
 
     it('should call submit method with data', () => {
       expect(submitMethod).toHaveBeenCalledWith(mockedData);
+    });
+  });
+
+  describe('when user click "Set form values" button', () => {
+    beforeEach(() => {
+      fixture.debugElement.query(By.css('.set-values')).nativeElement.click();
+
+      fixture.detectChanges();
+    });
+
+    it('should be set the form values', () => {
+      expect(component.form.value).toEqual(mockedData);
+    });
+  });
+
+  describe('when user click "Set name and email values" button', () => {
+    beforeEach(() => {
+      fixture.debugElement.query(By.css('.set-name-email-values')).nativeElement.click();
+
+      fixture.detectChanges();
+    });
+
+    it('should be set name and email values', () => {
+      expect(component.form.value).toEqual({
+        name: 'John Smith',
+        email: 'john.smith@mail.com',
+        issue: '',
+        agreements: {
+          newsletter: false,
+          rules: false
+        },
+        steps: [ '', '', '', '' ],
+        description: ''
+      });
     });
   });
 });
